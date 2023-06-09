@@ -1,7 +1,12 @@
+import { useState } from "react"
+
 const WorkoutForm = () => {
   const [title, setTitle] = useState("")
   const [load, setLoad] = useState("")
   const [reps, setReps] = useState("")
+  const [error, setError] = useState(null)
+
+  console.log()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -15,6 +20,17 @@ const WorkoutForm = () => {
         'Content-Type': 'application/json'
       }
     })
+    const json = await response.json()
+    if(!response.ok){
+      setError(json.error)
+    }
+    if (response.ok){
+      setTitle("")
+      setReps("")
+      setLoad("")
+      setError(null)
+      console.log("new workout added")
+    }
   }
 
   return(
@@ -43,6 +59,9 @@ const WorkoutForm = () => {
       />
 
       <button>Add Workout</button>
+      {error && <div className="error">{error}</div>}
     </form>
   )
 }
+
+export default WorkoutForm
